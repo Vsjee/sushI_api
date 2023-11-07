@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"sushi-api/configs"
-	routes "sushi-api/routes/sushi"
+	"sushi-api/routes/sushi"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -22,7 +22,7 @@ func main() {
 		return c.SendString("API for study purposes, gitrepo: https://github.com/Vsjee/sushi_api")
 	})
 	//questions api
-	routes.QuestionsRoute(app)
+	sushi.SushiRoute(app)
 
 	//get port
 	port := os.Getenv("PORT")

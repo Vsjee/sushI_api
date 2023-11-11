@@ -15,27 +15,27 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var questionsCollection *mongo.Collection = configs.GetCollection(configs.DB, "all_sushi")
+var sushisCollection *mongo.Collection = configs.GetCollection(configs.DB, "all_sushi")
 var validate = validator.New()
 
 func GetAllSushi(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	var questions []models.SushiElement
+	var sushis []models.SushiElement
 	defer cancel()
 
-	results, err := questionsCollection.Find(ctx, bson.M{})
+	results, err := sushisCollection.Find(ctx, bson.M{})
 
 	defer results.Close(ctx)
 	for results.Next(ctx) {
-		var singleQuestion models.SushiElement
-		if err = results.Decode(&singleQuestion); err != nil {
+		var singleSushi models.SushiElement
+		if err = results.Decode(&singleSushi); err != nil {
 			return c.Status(http.StatusInternalServerError).JSON(responses.SushiResponse{Status: http.StatusInternalServerError, Message: "error", Data: &fiber.Map{"data": err.Error()}})
 		}
 
-		questions = append(questions, singleQuestion)
+		sushis = append(sushis, singleSushi)
 	}
 
 	return c.Status(http.StatusOK).JSON(
-		questions,
+		sushis,
 	)
 }
